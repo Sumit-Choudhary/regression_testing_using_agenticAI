@@ -1,0 +1,391 @@
+{
+  "base_url": "https://www.saucedemo.com/",
+  "pages": [
+    {
+      "page_name": "login_page",
+      "path_identifier": "saucedemo.com",
+      "selectors": {
+        "username": {
+          "locator": "#user-name",
+          "uses": "Enter username"
+        },
+        "password": {
+          "locator": "#password",
+          "uses": "Enter password"
+        },
+        "login_button": {
+          "locator": "#login-button",
+          "uses": "Click to login"
+        }
+      }
+    },
+    {
+      "page_name": "inventory_page",
+      "path_identifier": "inventory.html",
+      "selectors": {
+        "add_to_cart_backpack": {
+          "locator": "#add-to-cart-sauce-labs-backpack",
+          "uses": "Button to add the backpack to the shopping cart"
+        },
+        "shopping_cart": {
+          "locator": ".shopping_cart_link",
+          "uses": "Link to view the shopping cart"
+        },
+        "react_burger_menu_btn": {
+          "locator": "#react-burger-menu-btn",
+          "uses": "Action for react-burger-menu-btn"
+        },
+        "shopping_cart_link": {
+          "locator": "#shopping-cart-link",
+          "uses": "Action for shopping-cart-link"
+        },
+        "item_4_img_link": {
+          "locator": "#item_4_img_link",
+          "uses": "Action for item_4_img_link"
+        },
+        "item_4_title_link": {
+          "locator": "#item_4_title_link",
+          "uses": "Action for item_4_title_link"
+        },
+        "add_to_cart_sauce_labs_backpack": {
+          "locator": "#add-to-cart-sauce-labs-backpack",
+          "uses": "Action for add-to-cart-sauce-labs-backpack"
+        },
+        "item_0_img_link": {
+          "locator": "#item_0_img_link",
+          "uses": "Action for item_0_img_link"
+        },
+        "item_0_title_link": {
+          "locator": "#item_0_title_link",
+          "uses": "Action for item_0_title_link"
+        },
+        "add_to_cart_sauce_labs_bike_light": {
+          "locator": "#add-to-cart-sauce-labs-bike-light",
+          "uses": "Action for add-to-cart-sauce-labs-bike-light"
+        },
+        "item_1_img_link": {
+          "locator": "#item_1_img_link",
+          "uses": "Action for item_1_img_link"
+        },
+        "item_1_title_link": {
+          "locator": "#item_1_title_link",
+          "uses": "Action for item_1_title_link"
+        },
+        "add_to_cart_sauce_labs_bolt_t_shirt": {
+          "locator": "#add-to-cart-sauce-labs-bolt-t-shirt",
+          "uses": "Action for add-to-cart-sauce-labs-bolt-t-shirt"
+        },
+        "item_5_img_link": {
+          "locator": "#item_5_img_link",
+          "uses": "Action for item_5_img_link"
+        },
+        "item_5_title_link": {
+          "locator": "#item_5_title_link",
+          "uses": "Action for item_5_title_link"
+        },
+        "add_to_cart_sauce_labs_fleece_jacket": {
+          "locator": "#add-to-cart-sauce-labs-fleece-jacket",
+          "uses": "Action for add-to-cart-sauce-labs-fleece-jacket"
+        },
+        "item_2_img_link": {
+          "locator": "#item_2_img_link",
+          "uses": "Action for item_2_img_link"
+        },
+        "item_2_title_link": {
+          "locator": "#item_2_title_link",
+          "uses": "Action for item_2_title_link"
+        },
+        "add_to_cart_sauce_labs_onesie": {
+          "locator": "#add-to-cart-sauce-labs-onesie",
+          "uses": "Action for add-to-cart-sauce-labs-onesie"
+        },
+        "item_3_img_link": {
+          "locator": "#item_3_img_link",
+          "uses": "Action for item_3_img_link"
+        },
+        "item_3_title_link": {
+          "locator": "#item_3_title_link",
+          "uses": "Action for item_3_title_link"
+        },
+        "add_to_cart_test.allthethings()_t_shirt_(red)": {
+          "locator": "#add-to-cart-test.allthethings()-t-shirt-(red)",
+          "uses": "Action for add-to-cart-test.allthethings()-t-shirt-(red)"
+        },
+        "social_twitter": {
+          "locator": "#social-twitter",
+          "uses": "Action for social-twitter"
+        },
+        "social_facebook": {
+          "locator": "#social-facebook",
+          "uses": "Action for social-facebook"
+        },
+        "social_linkedin": {
+          "locator": "#social-linkedin",
+          "uses": "Action for social-linkedin"
+        },
+        "product_sort": {
+          "locator": ".product_sort_container",
+          "uses": "Sort products. Values: 'az' (A-Z), 'za' (Z-A), 'lohi' (Price low-high), 'hilo' (Price high-low)"
+}
+      }
+      
+    },
+    {
+      "page_name": "cart_page",
+      "path_identifier": "cart.html",
+      "selectors": {
+        "root": {
+          "locator": "#root",
+          "uses": "Interact with root"
+        },
+        "page_wrapper": {
+          "locator": "#page_wrapper",
+          "uses": "Interact with page_wrapper"
+        },
+        "contents_wrapper": {
+          "locator": "#contents_wrapper",
+          "uses": "Interact with contents_wrapper"
+        },
+        "header_container": {
+          "locator": "#header_container",
+          "uses": "Interact with header_container"
+        },
+        "menu_button_container": {
+          "locator": "#menu_button_container",
+          "uses": "Interact with menu_button_container"
+        },
+        "react_burger_menu_btn": {
+          "locator": "#react-burger-menu-btn",
+          "uses": "Action for react-burger-menu-btn"
+        },
+        "inventory_sidebar_link": {
+          "locator": "#inventory_sidebar_link",
+          "uses": "Interact with inventory_sidebar_link"
+        },
+        "about_sidebar_link": {
+          "locator": "#about_sidebar_link",
+          "uses": "Interact with about_sidebar_link"
+        },
+        "logout_sidebar_link": {
+          "locator": "#logout_sidebar_link",
+          "uses": "Interact with logout_sidebar_link"
+        },
+        "reset_sidebar_link": {
+          "locator": "#reset_sidebar_link",
+          "uses": "Interact with reset_sidebar_link"
+        },
+        "react_burger_cross_btn": {
+          "locator": "#react-burger-cross-btn",
+          "uses": "Interact with react-burger-cross-btn"
+        },
+        "shopping_cart_container": {
+          "locator": "#shopping_cart_container",
+          "uses": "Interact with shopping_cart_container"
+        },
+        "cart_contents_container": {
+          "locator": "#cart_contents_container",
+          "uses": "Interact with cart_contents_container"
+        },
+        "item_4_title_link": {
+          "locator": "#item_4_title_link",
+          "uses": "Interact with item_4_title_link"
+        },
+        "remove_sauce_labs_backpack": {
+          "locator": "#remove-sauce-labs-backpack",
+          "uses": "Interact with remove-sauce-labs-backpack"
+        },
+        "continue_shopping": {
+          "locator": "#continue-shopping",
+          "uses": "Action for continue-shopping"
+        },
+        "checkout": {
+          "locator": "#checkout",
+          "uses": "Action for checkout"
+        },
+        "shopping_cart_link": {
+          "locator": "#shopping-cart-link",
+          "uses": "Action for shopping-cart-link"
+        },
+        "social_twitter": {
+          "locator": "#social-twitter",
+          "uses": "Action for social-twitter"
+        },
+        "social_facebook": {
+          "locator": "#social-facebook",
+          "uses": "Action for social-facebook"
+        },
+        "social_linkedin": {
+          "locator": "#social-linkedin",
+          "uses": "Action for social-linkedin"
+        }
+      }
+    },
+    {
+      "page_name": "checkout_step_one_page",
+      "path_identifier": "checkout-step-one.html",
+      "selectors": {
+        "root": {
+          "locator": "#root",
+          "uses": "Interact with root"
+        },
+        "page_wrapper": {
+          "locator": "#page_wrapper",
+          "uses": "Interact with page_wrapper"
+        },
+        "contents_wrapper": {
+          "locator": "#contents_wrapper",
+          "uses": "Interact with contents_wrapper"
+        },
+        "header_container": {
+          "locator": "#header_container",
+          "uses": "Interact with header_container"
+        },
+        "menu_button_container": {
+          "locator": "#menu_button_container",
+          "uses": "Interact with menu_button_container"
+        },
+        "react_burger_menu_btn": {
+          "locator": "#react-burger-menu-btn",
+          "uses": "Action for react-burger-menu-btn"
+        },
+        "inventory_sidebar_link": {
+          "locator": "#inventory_sidebar_link",
+          "uses": "Interact with inventory_sidebar_link"
+        },
+        "about_sidebar_link": {
+          "locator": "#about_sidebar_link",
+          "uses": "Interact with about_sidebar_link"
+        },
+        "logout_sidebar_link": {
+          "locator": "#logout_sidebar_link",
+          "uses": "Interact with logout_sidebar_link"
+        },
+        "reset_sidebar_link": {
+          "locator": "#reset_sidebar_link",
+          "uses": "Interact with reset_sidebar_link"
+        },
+        "react_burger_cross_btn": {
+          "locator": "#react-burger-cross-btn",
+          "uses": "Interact with react-burger-cross-btn"
+        },
+        "shopping_cart_container": {
+          "locator": "#shopping_cart_container",
+          "uses": "Interact with shopping_cart_container"
+        },
+        "checkout_info_container": {
+          "locator": "#checkout_info_container",
+          "uses": "Interact with checkout_info_container"
+        },
+        "first_name": {
+          "locator": "#first-name",
+          "uses": "Action for first-name"
+        },
+        "last_name": {
+          "locator": "#last-name",
+          "uses": "Action for last-name"
+        },
+        "postal_code": {
+          "locator": "#postal-code",
+          "uses": "Action for postal-code"
+        },
+        "cancel": {
+          "locator": "#cancel",
+          "uses": "Action for cancel"
+        },
+        "continue": {
+          "locator": "#continue",
+          "uses": "Action for continue"
+        },
+        "shopping_cart_link": {
+          "locator": "#shopping-cart-link",
+          "uses": "Action for shopping-cart-link"
+        },
+        "social_twitter": {
+          "locator": "#social-twitter",
+          "uses": "Action for social-twitter"
+        },
+        "social_facebook": {
+          "locator": "#social-facebook",
+          "uses": "Action for social-facebook"
+        },
+        "social_linkedin": {
+          "locator": "#social-linkedin",
+          "uses": "Action for social-linkedin"
+        }
+      }
+    },
+    {
+      "page_name": "about:blank_page",
+      "path_identifier": "about:blank",
+      "selectors": {}
+    },
+    {
+      "page_name": "checkout_step_two_page",
+      "path_identifier": "checkout-step-two.html",
+      "selectors": {
+        "react_burger_menu_btn": {
+          "locator": "#react-burger-menu-btn",
+          "uses": "Action for react-burger-menu-btn"
+        },
+        "shopping_cart_link": {
+          "locator": "#shopping-cart-link",
+          "uses": "Action for shopping-cart-link"
+        },
+        "item_4_title_link": {
+          "locator": "#item_4_title_link",
+          "uses": "Action for item_4_title_link"
+        },
+        "cancel": {
+          "locator": "#cancel",
+          "uses": "Action for cancel"
+        },
+        "finish": {
+          "locator": "#finish",
+          "uses": "Action for finish"
+        },
+        "social_twitter": {
+          "locator": "#social-twitter",
+          "uses": "Action for social-twitter"
+        },
+        "social_facebook": {
+          "locator": "#social-facebook",
+          "uses": "Action for social-facebook"
+        },
+        "social_linkedin": {
+          "locator": "#social-linkedin",
+          "uses": "Action for social-linkedin"
+        }
+      }
+    },
+    {
+      "page_name": "checkout_complete_page",
+      "path_identifier": "checkout-complete.html",
+      "selectors": {
+        "react_burger_menu_btn": {
+          "locator": "#react-burger-menu-btn",
+          "uses": "Action for react-burger-menu-btn"
+        },
+        "shopping_cart_link": {
+          "locator": "#shopping-cart-link",
+          "uses": "Action for shopping-cart-link"
+        },
+        "back_to_products": {
+          "locator": "#back-to-products",
+          "uses": "Action for back-to-products"
+        },
+        "social_twitter": {
+          "locator": "#social-twitter",
+          "uses": "Action for social-twitter"
+        },
+        "social_facebook": {
+          "locator": "#social-facebook",
+          "uses": "Action for social-facebook"
+        },
+        "social_linkedin": {
+          "locator": "#social-linkedin",
+          "uses": "Action for social-linkedin"
+        }
+      }
+    }
+  ]
+}

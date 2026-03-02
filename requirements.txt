@@ -1,0 +1,16 @@
+# --- Core AI Orchestration ---
+langgraph>=0.2.6
+langchain-core>=0.3.0
+langchain-google-genai>=4.2.1
+
+# --- Browser Automation ---
+playwright>=1.49.0
+beautifulsoup4>=4.12.2
+
+# --- Utilities & Evaluation ---
+python-dotenv>=1.0.0
+deepeval>=0.21.0
+pydantic>=2.10.0
+
+# --- Optional for Native Google SDK ---
+google-genai>=1.7.0
