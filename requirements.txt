@@ -14,3 +14,6 @@ pydantic>=2.10.0
 
 # --- Optional for Native Google SDK ---
 google-genai>=1.7.0
+
+#issue in deepeval
+click==8.1.7
