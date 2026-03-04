@@ -1,28 +1,45 @@
+"""
+Agentic QA Explorer - Entry Point
+---------------------------------
+This is the primary execution script for the Autonomous Web Agent. 
+It initializes the browser environment, defines the mission objectives, 
+and invokes the compiled LangGraph to begin the observation-reasoning-action loop.
+"""
+
 import asyncio
 import os
 from playwright.async_api import async_playwright
 from core.agent_graph import create_agent_graph
 
-# Configuration
-# 1. Define a comprehensive end-to-end goal
+# --- MISSION CONFIGURATION ---
+# Define a multi-step objective for the Agent to verify end-to-end functionality.
 TARGET_GOAL = (
-    "1. Login to SauceDemo using 'standard_user' and 'secret_sauce'. "
-    "2. Sort the items on the inventory page"
-    #"2. Add the 'Sauce Labs Backpack' to the cart. "
-    #"3. Go to the cart and complete the checkout process by entering valid firstname, lastname and zip code. "
-    #"4. Terminate once you reach the checkout complete page."
+    "1. Login to SauceDemo using valid user name and valid password credentials. "
+    "2. Add a product from the page to the cart."
+    "3. Complete the checkout page"
+    "4. Fill user info page with Mexican names"
+    "3. Terminate once the final success message is seen"
 )
 
 async def run_automation():
+    """
+    Orchestrates the lifecycle of an automation mission:
+    1. Resource Setup (Browser & Context)
+    2. State Initialization
+    3. Graph Compilation & Execution
+    4. Post-Mission Validation & Cleanup
+    """
     async with async_playwright() as p:
-        # 1. Launch Browser
-        print("🚀 [STARTING]: Launching Chromium...")
-        browser = await p.chromium.launch(headless=False)  # Set to True for production
+        
+        # 1. BROWSER INITIALIZATION
+        # 'headless=False' allows real-time monitoring of the Agent's navigation.
+        print("🚀 [STARTING]: Launching Chromium instance...")
+        browser = await p.chromium.launch(headless=False) 
         context = await browser.new_context()
         page = await context.new_page()
 
-        # 2. Define Initial State
-        # Note: 'history' is initialized as an empty list
+        # 2. STATE INITIALIZATION
+        # Configures the initial 'AgentState' schema required by LangGraph.
         initial_state = {
             "goal": TARGET_GOAL,
             "current_page": "initialization",
@@ -34,42 +51,59 @@ async def run_automation():
             "next_action": {}
         }
 
-        # 3. Compile the Graph
-        print("🕸️  [GRAPH]: Compiling Agent Graph...")
+        # 3. GRAPH ORCHESTRATION
+        # Compiles the Vision-Reasoning-Execution nodes into an executable app.
+        print("🕸️  [GRAPH]: Compiling state machine nodes...")
         app = create_agent_graph()
 
-        # 4. Invoke the Graph
-        # We pass the 'page' object via the 'configurable' dict so nodes can access it
         print(f"🎯 [MISSION]: {TARGET_GOAL}")
         
         try:
-            # We use a recursion limit to prevent infinite loops during testing
-            config = {"configurable": {"page": page,
-                                       "thread_id": "test_session_2026"}, "recursion_limit": 50}
+            # 4. GRAPH INVOCATION
+            # config: contains 'configurable' parameters (like the page object) 
+            # and safety constraints (recursion_limit).
+            config = {
+                "configurable": {
+                    "page": page,
+                    "thread_id": "test_session_2026"
+                }, 
+                "recursion_limit": 50  # Prevents infinite loops if the LLM gets stuck
+            }
             
+            # Start the asynchronous loop
             final_state = await app.ainvoke(initial_state, config=config)
             
-            # 5. Validation Logic
-            print("\n--- 🏁 MISSION RESULTS ---")
-            if final_state.get("history") and "Goal Achieved" in final_state["history"][-1]:
-                print("✅ SUCCESS: The agent reached the goal and terminated correctly.")
-            else:
-                print("⚠️  PARTIAL: The graph ended, but 'Goal Achieved' was not found in history.")
+            # 5. MISSION DEBRIEF
+            print("\n" + "="*30)
+            print("🏁 MISSION RESULTS")
+            print("="*30)
             
-            print(f"📝 Final Page: {final_state.get('current_page')}")
+            # Check for the logical termination signal in the accumulated history
+            if final_state.get("history") and "Goal Achieved" in final_state["history"][-1]:
+                print("✅ SUCCESS: The agent achieved the objective and exited gracefully.")
+            else:
+                print("⚠️  PARTIAL: Workflow concluded, but mission completion signal was missing.")
+            
+            print(f"📝 Final Context: {final_state.get('current_page')}")
             print(f"🔗 Final URL: {final_state.get('url')}")
             
         except Exception as e:
-            print(f"❌ [CRITICAL FAILURE]: {str(e)}")
+            print(f"❌ [CRITICAL FAILURE]: An unhandled exception occurred: {str(e)}")
         
         finally:
-            print("\n🏁 [MISSION ENDED]: Closing browser in 5 seconds...")
+            # 6. GRACEFUL TEARDOWN
+            # Allows time for final visual inspection before closing the browser.
+            print("\n🏁 [MISSION ENDED]: Closing session in 5 seconds...")
             await asyncio.sleep(5)
             await browser.close()
 
 if __name__ == "__main__":
-    # Ensure environment variables are loaded
+    """
+    Bootstrap the execution environment.
+    Verifies authentication requirements before launching the async event loop.
+    """
     if not os.getenv("GOOGLE_API_KEY"):
-        print("❌ ERROR: GOOGLE_API_KEY not found in environment.")
+        print("❌ [CONFIG ERROR]: GOOGLE_API_KEY missing. Please check your .env file.")
     else:
+        # Launch the high-level automation routine
         asyncio.run(run_automation())
