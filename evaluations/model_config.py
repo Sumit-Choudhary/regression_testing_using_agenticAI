@@ -37,14 +37,12 @@ class GeminiJudge(DeepEvalBaseLLM):
         """
         self.model_name = model_name
         api_key = os.getenv("GOOGLE_API_KEY")
-        
         if not api_key:
-            raise ValueError("[CONFIGURATION ERROR]: GOOGLE_API_KEY not found in environment.")
-        
-        # Initialize the LangChain chat model instance
+            raise ValueError("[CONFIGURATION ERROR]: GOOGLE_API_KEY not found.")
         self.model = ChatGoogleGenerativeAI(
             model=model_name,
-            google_api_key=api_key
+            google_api_key=api_key,
+            temperature=0  
         )
 
     def load_model(self) -> ChatGoogleGenerativeAI:
@@ -73,9 +71,9 @@ class GeminiJudge(DeepEvalBaseLLM):
             str: The generated textual response from the model.
         """
         chat_model = self.load_model()
-        # Execution of the synchronous invoke call
-        res = chat_model.invoke(prompt)
-        return str(res.content)
+        if schema is not None:
+            return chat_model.with_structured_output(schema).invoke(prompt)
+        return str(chat_model.invoke(prompt).content)
 
     async def a_generate(self, prompt: str, schema: Optional[Any] = None) -> str:
         """
@@ -90,9 +88,9 @@ class GeminiJudge(DeepEvalBaseLLM):
             str: The generated textual response from the model.
         """
         chat_model = self.load_model()
-        # Execution of the asynchronous invoke call
-        res = await chat_model.ainvoke(prompt)
-        return str(res.content)
+        if schema is not None:
+            return await chat_model.with_structured_output(schema).ainvoke(prompt)
+        return str((await chat_model.ainvoke(prompt)).content)
 
     def get_model_name(self) -> str:
         """

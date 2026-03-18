@@ -108,7 +108,7 @@
           "uses": "Action for item_3_title_link"
         },
         "add_to_cart_test.allthethings()_t_shirt_(red)": {
-          "locator": "item_3_title_link",
+          "locator": "#item_3_title_link",
           "uses": "Action for add-to-cart-test.allthethings()-t-shirt-(red)"
         },
         "social_twitter": {

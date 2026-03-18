@@ -120,5 +120,6 @@ class ConfigGenerator:
                 return enriched_data
             except Exception as e:
                 print(f"[ERROR]: JSON transformation failed. Source: {e}")
-                await browser.close()
                 return None
+            finally:
+                await browser.close()

@@ -6,63 +6,59 @@ validation of the Web Navigation Agent. It utilizes a 'Hybrid Evaluation'
 approach, combining semantic reasoning (G-Eval) with deterministic 
 technical validation (ToolCorrectnessMetric).
 """
-
 import pytest
-import os
-import json
-from datetime import datetime
 from deepeval import assert_test
 from deepeval.test_case import LLMTestCase, LLMTestCaseParams, ToolCall
 from deepeval.metrics import GEval, ToolCorrectnessMetric
-from evaluations.model_config import GeminiJudge 
+from evaluations.model_config import GeminiJudge
 
-# --- CONFIGURATION ---
-RESULTS_FOLDER = "./test_results"
+# --- SHARED FIXTURES ---
 
-# Ensure persistence directory exists for test artifacts
-if not os.path.exists(RESULTS_FOLDER):
-    os.makedirs(RESULTS_FOLDER)
+@pytest.fixture
+def gemini_judge():
+    return GeminiJudge()
 
-@pytest.mark.asyncio
-async def test_login_comprehensive_validation():
-    """
-    Validates the end-to-end login workflow of the SauceDemo application.
-    
-    This test assesses:
-    1. Semantic Goal Achievement: Did the agent reach the inventory page?
-    2. Tool Execution Accuracy: Did the agent call the correct sequence of tools?
-    """
-    
-    # Initialize the LLM-as-a-Judge using the custom Gemini configuration
-    gemini_judge = GeminiJudge()
-
-    # --- 1. METRIC DEFINITIONS ---
-
-    # G-Eval: Uses LLM reasoning to grade the actual output against a rubric
-    login_metric = GEval(
+@pytest.fixture
+def login_metric(gemini_judge):
+    return GEval(
         name="Login Success",
         evaluation_steps=[
-            "Check if the actual output mentions typing into #user-name and #password.",
-            "Check if the agent clicked the #login-button.",
-            "Verify that the final URL contains 'inventory.html'.",
-            "Give a high score if all these navigation steps are present."
+            "Check if 'standard_user' (exact value) was typed into #user-name. Fail if any other username was used.",
+            "Check if 'secret_sauce' was typed into #password.",
+            "Check if #login-button was clicked after both fields were filled.",
+            "Check if the final URL contains 'inventory.html'.",
+            "Score 0 if wrong credentials were used, even if the URL shows success.",
+            "Only score above 0.7 if ALL four conditions above are met."
         ],
         evaluation_params=[LLMTestCaseParams.INPUT, LLMTestCaseParams.ACTUAL_OUTPUT],
         model=gemini_judge,
         threshold=0.7
     )
 
-    # ToolCorrectnessMetric: Validates the technical precision of function calling
-    tool_metric = ToolCorrectnessMetric(
+@pytest.fixture
+def tool_metric(gemini_judge):
+    return ToolCorrectnessMetric(
         threshold=0.7,
         model=gemini_judge,
-        # Set to True to ensure the agent follows the logical order of operations
         should_consider_ordering=True
     )
 
-    # --- 2. TEST CASE CONSTRUCTION ---
+# Ground truth tool sequence — shared across passing and failing tests
+EXPECTED_TOOLS = [
+    ToolCall(name="type_text", input_parameters={"selector": "#user-name", "value": "standard_user"}),
+    ToolCall(name="type_text", input_parameters={"selector": "#password", "value": "secret_sauce"}),
+    ToolCall(name="click_element", input_parameters={"selector": "#login-button"})
+]
 
-    # This test case simulates the expected state after a successful agent run
+
+# --- TEST CASES ---
+
+@pytest.mark.asyncio
+async def test_login_success(login_metric, tool_metric):
+    """
+    PASSING CASE: Agent uses correct credentials and reaches inventory page.
+    This test should PASS.
+    """
     test_case = LLMTestCase(
         input="Login to SauceDemo with standard_user",
         actual_output="""
@@ -71,19 +67,65 @@ async def test_login_comprehensive_validation():
             3. Clicked #login-button
             4. Current URL is: https://www.saucedemo.com/inventory.html
         """,
-        retrieval_context=["Inventory page is the success state."],
-        
-        # Captured tools during the 'Act' phase of the agent loop
         tools_called=[
-            ToolCall(name="type_text", input_parameters={"selector": "#user-name"}),
+            ToolCall(name="type_text", input_parameters={"selector": "#user-name", "value": "standard_user"}),
+            ToolCall(name="type_text", input_parameters={"selector": "#password", "value": "secret_sauce"}),
             ToolCall(name="click_element", input_parameters={"selector": "#login-button"})
         ],
-        
-        # Ground Truth: Expected tool sequence for the defined goal
-        expected_tools=[
-            # Note: Empty dicts prevent NoneType calculation errors in DeepEval core
-            ToolCall(name="type_text", input_parameters={}),
-            ToolCall(name="click_element", input_parameters={})
-        ],
-        expected_output="The agent should successfully navigate to the inventory page after entering credentials."
+        expected_tools=EXPECTED_TOOLS,
+        expected_output="Agent navigates to inventory page after entering valid credentials."
     )
+
+    # ← This line was missing in the original — nothing was being evaluated without it
+    assert_test(test_case, [login_metric, tool_metric])
+
+
+@pytest.mark.asyncio
+async def test_login_wrong_credentials(login_metric, tool_metric):
+    """
+    FAILING CASE: Agent uses wrong username. 
+    This test should FAIL — verifies the metrics are actually catching errors.
+    """
+    test_case = LLMTestCase(
+        input="Login to SauceDemo with standard_user",
+        actual_output="""
+            1. Typed 'standard_wrong_user' into #user-name
+            2. Typed 'secret_sauce' into #password
+            3. Clicked #login-button
+            4. Current URL is: https://www.saucedemo.com/inventory.html
+        """,
+        tools_called=[
+            ToolCall(name="type_text", input_parameters={"selector": "#user-name", "value": "standard_wrong_user"}),
+            ToolCall(name="type_text", input_parameters={"selector": "#password", "value": "secret_sauce"}),
+            ToolCall(name="click_element", input_parameters={"selector": "#login-button"})
+        ],
+        expected_tools=EXPECTED_TOOLS,
+        expected_output="Agent navigates to inventory page after entering valid credentials."
+    )
+
+    assert_test(test_case, [login_metric, tool_metric])
+
+
+@pytest.mark.asyncio
+async def test_login_missing_password_step(login_metric, tool_metric):
+    """
+    FAILING CASE: Agent skips the password field entirely.
+    This test should FAIL — catches incomplete tool sequences.
+    """
+    test_case = LLMTestCase(
+        input="Login to SauceDemo with standard_user",
+        actual_output="""
+            1. Typed 'standard_user' into #user-name
+            2. Clicked #login-button
+            3. Current URL is: https://www.saucedemo.com/ (login failed)
+        """,
+        tools_called=[
+            ToolCall(name="type_text", input_parameters={"selector": "#user-name", "value": "standard_user"}),
+            ToolCall(name="click_element", input_parameters={"selector": "#login-button"})
+            # password step deliberately missing
+        ],
+        expected_tools=EXPECTED_TOOLS,
+        expected_output="Agent navigates to inventory page after entering valid credentials."
+    )
+
+    assert_test(test_case, [login_metric, tool_metric])

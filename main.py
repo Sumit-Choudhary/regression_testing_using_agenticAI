@@ -13,8 +13,10 @@ from core.agent_graph import create_agent_graph
 
 # --- MISSION CONFIGURATION ---
 # Define a multi-step objective for the Agent to verify end-to-end functionality.
+
 TARGET_GOAL = (
     "1. Login to SauceDemo using valid user name and valid password credentials. "
+    "2. Sort the items on the page."
     "2. Add a product from the page to the cart."
     "3. Complete the checkout page"
     "4. Fill user info page with Mexican names"
